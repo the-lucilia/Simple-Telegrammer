@@ -1,0 +1,4 @@
+user_agent = "yourname"
+templates = ["99999999"]
+secret_keys = ["1a2b3c4d5e6fg"]
+client_key = "1a2b3c"
