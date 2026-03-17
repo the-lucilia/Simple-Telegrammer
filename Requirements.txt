@@ -1,1 +1,2 @@
-sans
+tomli~=2.2.1
+sans~=1.3.4
