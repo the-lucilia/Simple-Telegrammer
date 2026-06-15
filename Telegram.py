@@ -8,10 +8,11 @@ import threading
 # Load TOML file
 with open("config.toml", "rb") as config:
     info = tomli.load(config)
-ua = "{} using Simple Telegrammer Beta".format(info["user_agent"])
+ua = "{} using Simple Telegrammer Beta".format(info["User-Agent"]["user_agent"])
+telegrams = info["Telegrams"]  # This is a dictionary with all of the TG information now
 
 # Find out how many campaigns we're running
-n = len(info["templates"])
+n = len(info["Telegrams"]["templates"])
 print("{} Campaigns To Be Run".format(n))
 
 nations_queue = []
@@ -55,10 +56,12 @@ def sse_listener():
 # Start the SSE thread
 threading.Thread(target=sse_listener, daemon=True).start()
 
+
 # Telegramming Loop
 while True:
     pick = random.randint(0, (n - 1))
-    print(len(nations_queue))
+    print(f"Queue is currently: {len(nations_queue)}")
+    
     if len(nations_queue) == 0:
         print("TELEGRAM: No Nations To Telegram. Waiting 30s")
         sleep(30)
@@ -79,12 +82,13 @@ while True:
         try:
             response = sans.get(
                 sans.Telegram(
-                    client=info["client_key"],
-                    tgid=info["templates"][pick],
-                    key=info["secret_keys"][pick],
+                    client=telegrams["client_key"][pick],
+                    tgid=telegrams["templates"][pick],
+                    key=telegrams["secret_keys"][pick],
                     to=candidate)
             )
             print(response)
         except Exception as e:
             print(e)
         sleep(180.1)
+
